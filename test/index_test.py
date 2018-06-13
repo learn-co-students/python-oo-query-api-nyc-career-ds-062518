@@ -10,6 +10,9 @@ class TestApiObjects(unittest.TestCase):
     global first_show
     first_show = Show.all()[0]
 
+    def test_data(self):
+        self.assertEqual(len(data), 20)
+
     def test_artist_has_name(self):
         self.assertEqual(beatles.name, "The Beatles")
 
