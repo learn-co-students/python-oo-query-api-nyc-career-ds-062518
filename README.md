@@ -14,7 +14,7 @@ We will be working with the [setlist.fm](https://api.setlist.fm/docs/1.0/index.h
 
 ![beatles](beatles.jpg)
 
-#### Part 1: Extraction
+#### Part 1: Extract
 
 As with most APIs, setlist.fm requires us to create an account and apply for our own API key to access its data.  Go to the link above and click on "register first" to fill out a form for creating an account.  Check your email for a message asking to confirm the newly created account.
 
@@ -28,17 +28,27 @@ Let's try getting data on Beatles concerts from the 1965.  Under `/1.0/search/se
 
 Awesome!  Our request seems to be working properly.
 
-**`setlist_data.py`**
+**`config.py`** and **`setlist_data.py`**
 
-Now that we know that our API key is working, we will make our request in the setlist_data.py file so that our program can access the API's data.  We need to import requests at the top of the file.  Just as we did in our test run above, we will want to make the same GET request with headers for accepting a JSON response and our API key.  We can pass these into our GET request by means of a dictionary as we can see below:
+Now that we know that our API key is working, we will make our request in the `setlist_data.py` file so that our program can access the API's data.  To do so, we'll need to use our API key.
 
-```python
-token = 'your-token-goes-here'
-headers = {'Accept': 'application/json', 'x-api-key': token}
+**Hiding the API key**
+>**Important:** Just as with a password, we never want to publish our private API key to a public place like Github because nefarious actors could do something bad using it without our knowledge.
 
-response = requests.get('https://api.setlist.fm/rest/1.0/search/setlists?artistName=The%20Beatles&p=1&year=1965', headers=headers)
-raw_data = json.loads(response.content)
-```
+Create a `config.py` file in the `app` subdirectory and add a variable containing a string of your API key like so:
+
+> `token = 'your-api-key-goes-here'`
+
+We already have added `config.py` to the `.gitignore` file so that your secret token will not be published to Github.  In `setlist_data.py`, where we will make the API request, we can import the config file and use our API token while still keeping it a secret from the public.
+
+We need to import requests at the top of `setlist_data.py` to handle our API request.  Just as we did in our test run above, we will want to make the same GET request with headers for accepting a JSON response and our API key.  We can pass these into our GET request by means of a dictionary as we can see below.  The token variable comes from our hidden config file.
+
+>```python
+>headers = {'Accept': 'application/json', 'x-api-key': token}
+
+>response = requests.get('https://api.setlist.fm/rest/1.0/search/setlists?artistName=The%20Beatles&p=1&year=1965', headers=headers)
+>raw_data = json.loads(response.content)
+>```
 
 Uncomment the debugger in the middle of the file to play around with out response data.  If we look at `response.content`, we see that the content of response variable above is one long JSON string.  We want to work with the dictionary inside that string, which is why we need to `import json` at the top of the file and use `json.loads` to transform our response's content into a format we can work with later.
 
@@ -74,7 +84,7 @@ Like the Artist model, we'll want to create a `_all` class variable that keeps t
 
 **`etl.py`**
 
-Once our models are set, we are finally ready to work with out `data` from the API and use it to create Artist and Show objects!  At the top of etl.py, we have already imported our Artist and Show classes as well as our `data` that we pulled from the API.
+Once our models are set, we are finally ready to work with out `data` from the API and use it to create Artist and Show objects!  At the top of `etl.py`, we have already imported our Artist and Show classes as well as our `data` that we pulled from the API.
 
 First, write a method called `find_or_create_artist` that accepts an artist name as a parameter.  If an Artist instance of that name exists, it will return that object. Otherwise, it will create a new Artist instance with that name and return it.
 
