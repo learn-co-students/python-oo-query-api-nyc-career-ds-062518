@@ -1,6 +1,6 @@
 import unittest, sys
 sys.path.insert(0, '..')
-from app.etl import *
+from etl import *
 
 class TestApiObjects(unittest.TestCase):
     create_all = make_show_objects(data)

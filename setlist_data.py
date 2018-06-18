@@ -1,9 +1,8 @@
 import requests
 import json
-from app.config import *
+from config import API_KEY
 
 # Make your API request here
-
 
 
 

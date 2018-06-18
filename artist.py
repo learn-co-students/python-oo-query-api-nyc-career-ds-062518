@@ -1,4 +1,4 @@
-from app.show import Show
+from show import Show
 
 # Write the Artist model here:
 class Artist:
