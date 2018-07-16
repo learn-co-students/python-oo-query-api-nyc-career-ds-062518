@@ -2,4 +2,26 @@ from show import Show
 
 # Write the Artist model here:
 class Artist:
-    pass
+    _all = []
+
+    def __init__(self, name):
+        self._name = name
+        Artist._all.append(self)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+    @classmethod
+    def all(cls):
+        return cls._all
+
+    def shows(self):
+        return [show for show in Show.all() if show.artist == self]
+
+    def find_by_name(self, name):
+        return [artist for artist in Artist.all() if artist.name == name][0]
